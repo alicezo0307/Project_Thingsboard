@@ -1,0 +1,53 @@
+import requests
+
+# ใส่โทเค็น LINE Notify ที่คุณสร้างไว้
+line_token = 'Sk774OvoBmGy1DRAtKfpZNLx3BsNz4zvCOO77lqj2Se'
+
+def send_line_notify(message, token=line_token):
+    url = 'https://notify-api.line.me/api/notify'
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+    payload = {'message': message}
+    response = requests.post(url, headers=headers, data=payload)
+    return response.status_code, response.text
+
+def check_and_notify(values, thresholds, token=line_token):
+    for key, value in values.items():
+        threshold = thresholds.get(key, None)
+        if threshold is not None and value > threshold:
+            message = f"Alert: The value of '{key}' is {value}, which exceeds the threshold of {threshold}."
+            status_code, response_text = send_line_notify(message, token)
+            if status_code == 200:
+                print(f"Notification sent successfully for {key}.")
+            else:
+                print(f"Failed to send notification for {key}. Status code: {status_code}")
+                print(f"Response: {response_text}")
+
+if __name__ == "__main__":
+    # ตัวอย่างค่าที่ต้องการตรวจสอบ
+    values = {
+        'temperature': 30,
+        'humidity': 80,
+        'pressure': 1020
+    }
+
+    # ขีดจำกัดสำหรับแต่ละตัวแปร
+    thresholds = {
+        'temperature': 25,  # ขีดจำกัดสำหรับอุณหภูมิ
+        'humidity': 70,     # ขีดจำกัดสำหรับความชื้น
+        'pressure': 1010    # ขีดจำกัดสำหรับความดัน
+    }
+
+    # ส่งข้อความทดสอบ
+    test_message = 'Hello! This is a test message from Raspberry Pi.'
+    status, response_text = send_line_notify(test_message)
+
+    if status == 200:
+        print('Test message sent successfully!')
+    else:
+        print('Failed to send test message. Status code:', status)
+        print('Response:', response_text)
+
+    # ตรวจสอบค่าและส่งการแจ้งเตือน
+    check_and_notify(values, thresholds, line_token)
