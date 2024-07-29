@@ -57,7 +57,7 @@ while True:
             voltage = values[3]
             humSoil = values[4]
             tempSoil = values[5]
-            mineral = values[6]
+            ec = values[6]
             snr = latest_data.get("SNR", None)
             rssi = latest_data.get("RSSI", None)
 
@@ -79,7 +79,7 @@ while True:
             print("Voltage:", voltage)
             print("HumSoil:", humSoil)
             print("TempSoil:", tempSoil)
-            print("Mineral:", mineral)
+            print("EC:", ec)
             print("SNR:", snr)
             print("RSSI:", rssi)
             print("SNR Status:", snr_status)
@@ -94,7 +94,7 @@ while True:
                 "voltage": voltage,
                 "humSoil": humSoil,
                 "tempSoil": tempSoil,
-                "mineral": mineral,
+                "EC": ec,
                 "SNR": snr,
                 "SNR_Status": snr_status,
                 "RSSI": rssi
@@ -111,8 +111,6 @@ while True:
             # ส่งข้อมูล
             client.publish('v1/devices/me/telemetry', json.dumps(payload))
 
-            # ปิดการเชื่อมต่อ
-            client.disconnect()
         else:
             print("Error: Not enough data received.")
             
