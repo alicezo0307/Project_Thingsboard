@@ -154,8 +154,8 @@ while True:
         if current_time - last_notification_time >= timedelta(minutes=1):
             if distance_calculated <= 0:
                 send_line_notification("ระดับน้ำเหลือ 0 cm", line_token)
-            elif distance_calculated > 10:
-                send_line_notification("ระดับน้ำมากกว่า 10 cm", line_token)
+            elif distance_calculated > 15:
+                send_line_notification("ระดับน้ำมากกว่า 15 cm", line_token)
             if voltage_float and voltage_float < 3.0:
                 send_line_notification("แบตต่ำ", line_token)
 
